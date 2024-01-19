@@ -1,0 +1,73 @@
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: requirements/nginx/Dockerfile
+    container_name: nginx
+    depends_on:
+      - wordpress
+    ports:
+      - "443:443"
+    networks:
+      - inception
+    volumes:
+      - wp-volume:/var/www/
+    restart: on-failure
+
+  mariadb:
+    build:
+      context: .
+      dockerfile: requirements/mariadb/Dockerfile
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+        DB_ROOT: ${DB_ROOT}
+    container_name: mariadb
+    networks:
+      - inception
+    volumes:
+      - db-volume:/var/lib/mysql
+    restart: on-failure
+
+  wordpress:
+    build:
+      context: .
+      dockerfile: requirements/wordpress/Dockerfile
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      WP_ADMIN: ${WP_ADMIN}
+      WP_PASS: ${WP_PASS}
+      WP_EMAIL: ${WP_EMAIL}
+      WP_USER_PASS: ${WP_USER_PASS}
+      WP_USER_USER: ${WP_USER_USER}
+      WP_USER_EMAIL: ${WP_USER_EMAIL}
+      
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    restart: on-failure
+    networks:
+      - inception
+    volumes:
+      - wp-volume:/var/www/
+
+volumes:
+  wp-volume:
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/${USER}/data/wordpress
+  db-volume:
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/${USER}/data/mariadb
+
+networks:
+  inception:
+    driver: bridge
