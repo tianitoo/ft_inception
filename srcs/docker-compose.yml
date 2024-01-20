@@ -13,6 +13,8 @@ services:
     networks:
       - inception
     volumes:
+      - ./requirements/nginx/conf/:/etc/nginx/http.d/
+      - ./requirements/nginx/tools:/etc/nginx/ssl/
       - wp-volume:/var/www/
     restart: on-failure
 
@@ -36,25 +38,18 @@ services:
     build:
       context: .
       dockerfile: requirements/wordpress/Dockerfile
-    environment:
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASS: ${DB_PASS}
-      WP_ADMIN: ${WP_ADMIN}
-      WP_PASS: ${WP_PASS}
-      WP_EMAIL: ${WP_EMAIL}
-      WP_USER_PASS: ${WP_USER_PASS}
-      WP_USER_USER: ${WP_USER_USER}
-      WP_USER_EMAIL: ${WP_USER_EMAIL}
-      
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
     container_name: wordpress
     depends_on:
       - mariadb
-    restart: on-failure
     networks:
       - inception
     volumes:
       - wp-volume:/var/www/
+    restart: on-failure
 
 volumes:
   wp-volume:
@@ -62,6 +57,7 @@ volumes:
       o: bind
       type: none
       device: /home/${USER}/data/wordpress
+
   db-volume:
     driver_opts:
       o: bind
@@ -69,5 +65,5 @@ volumes:
       device: /home/${USER}/data/mariadb
 
 networks:
-  inception:
-    driver: bridge
+    inception:
+        driver: bridge
