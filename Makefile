@@ -1,10 +1,10 @@
 
 all:
-	mkdir -p /home/hnait/data/mariadb && mkdir -p /home/hnait/data/wordpress
+	sh ./srcs/requirements/wordpress/tools/make_dir.sh
 	docker-compose -f ./srcs/docker-compose.yml up -d
-
 build:
 	
+	sh ./srcs/requirements/wordpress/tools/make_dir.sh
 	docker-compose -f ./srcs/docker-compose.yml build
 
 down:
@@ -21,7 +21,6 @@ clean: down
 
 fclean:
 	sudo rm -rf /home/hnait/data/mariadb  && sudo rm -rf /home/hnait/data/wordpress
-	mkdir -p /home/hnait/data/mariadb && mkdir -p /home/hnait/data/wordpress
 	docker stop $$(docker ps -qa) 2>/dev/null || true
 	docker rm $$(docker ps -qa) 2>/dev/null || true
 	docker rmi -f $$(docker images -qa) 2>/dev/null || true
