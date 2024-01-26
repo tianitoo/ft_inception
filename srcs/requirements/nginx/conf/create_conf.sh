@@ -1,7 +1,5 @@
 #!/bin/sh
 
-echo balbbddk
-echo $CERT
 cat << EOF > /etc/nginx/http.d/nginx.conf
 server {
     listen      443 ssl;
@@ -10,11 +8,11 @@ server {
     index index.php;
     ssl_certificate     ${CERT};
     ssl_certificate_key ${KEY};
-    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_protocols       TLSv1.3;
     ssl_session_timeout 10m;
     keepalive_timeout 70;
     location / {
-        try_files \$uri /index.php?\$args;
+        try_files \$uri \$uri/ /index.php?\$args;
     }
     location ~ \.php$ {
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -26,6 +24,3 @@ server {
     }
 }
 EOF
-
-
-cat /etc/nginx/http.d/nginx.conf

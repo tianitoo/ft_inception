@@ -8,7 +8,6 @@ COPY requirements/nginx/conf/create_conf.sh .
 
 RUN echo $CERT
 RUN chmod 777 create_conf.sh && sh ./create_conf.sh && rm create_conf.sh
-# RUN cat /etc/nginx/http.d/nginx.conf
 
 EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
