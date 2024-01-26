@@ -5,6 +5,9 @@ services:
     build:
       context: .
       dockerfile: requirements/nginx/Dockerfile
+      args:
+        CERT: ${CERT}
+        KEY: ${KEY}
     container_name: nginx
     depends_on:
       - wordpress
