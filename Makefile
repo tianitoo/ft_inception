@@ -1,10 +1,10 @@
 
 all:
-	sh ./srcs/requirements/wordpress/tools/make_dir.sh
+	sh ./srcs/requirements/tools/make_dir.sh
 	docker-compose -f ./srcs/docker-compose.yml up -d
 build:
 	
-	sh ./srcs/requirements/wordpress/tools/make_dir.sh
+	sh ./srcs/requirements/tools/make_dir.sh
 	docker-compose -f ./srcs/docker-compose.yml build
 
 down:
